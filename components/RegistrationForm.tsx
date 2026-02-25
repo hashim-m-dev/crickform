@@ -15,7 +15,7 @@ const registrationSchema = z.object({
     category: z.string().min(1, 'Category is required'),
     age: z.coerce.number().min(5, 'Invalid age').max(100, 'Invalid age'),
     dob: z.string().min(1, 'Date of Birth is required'),
-    gender: z.union([z.literal('Male'), z.literal('Female'), z.literal('Other')], { errorMap: () => ({ message: 'Select gender' }) }),
+    gender: z.enum(['Male', 'Female', 'Other'], { message: 'Select gender' }),
     occupation: z.string().optional(),
 
     mobile: z.string().regex(/^[0-9]{10}$/, 'Must be a 10-digit number'),
@@ -28,10 +28,10 @@ const registrationSchema = z.object({
     address: z.string().min(5, 'Address is required'),
     social_link: z.string().url('Invalid URL').optional().or(z.literal('')),
 
-    tshirt_size: z.union([z.literal('XS'), z.literal('S'), z.literal('M'), z.literal('L'), z.literal('XL'), z.literal('XXL'), z.literal('XXXL')], { errorMap: () => ({ message: 'Select shirt size' }) }),
+    tshirt_size: z.enum(['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'], { message: 'Select shirt size' }),
     first_preference: z.string().optional(),
-    batting_arm: z.union([z.literal('Right'), z.literal('Left')], { errorMap: () => ({ message: 'Select batting arm' }) }),
-    player_role: z.union([z.literal('Batsman'), z.literal('Bowler'), z.literal('All Rounder'), z.literal('Wicket Keeper')], { errorMap: () => ({ message: 'Select role' }) }),
+    batting_arm: z.enum(['Right', 'Left'], { message: 'Select batting arm' }),
+    player_role: z.enum(['Batsman', 'Bowler', 'All Rounder', 'Wicket Keeper'], { message: 'Select role' }),
 })
 
 interface Props {
@@ -241,7 +241,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">PLAYER NAME *</label>
                         <input {...register('name')} type="text" className="input-cyber" placeholder="FULL LEGAL NAME" />
-                        {errors.name && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.name.message}</p>}
+                        {errors.name && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.name as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -252,19 +252,19 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">CATEGORY SECTOR *</label>
                         <input {...register('category')} type="text" className="input-cyber" placeholder="OPEN / U-19 / VETERAN" />
-                        {errors.category && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.category.message}</p>}
+                        {errors.category && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.category as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">BIRTH CYCLE *</label>
                         <input {...register('dob')} type="date" className="input-cyber" />
-                        {errors.dob && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.dob.message}</p>}
+                        {errors.dob && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.dob as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">CHRONO AGE *</label>
                         <input {...register('age')} type="number" className="input-cyber" placeholder="YEARS" />
-                        {errors.age && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.age.message}</p>}
+                        {errors.age && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.age as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -275,7 +275,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                             <option value="Female" className="bg-[#0A0A0F]">FEMALE</option>
                             <option value="Other" className="bg-[#0A0A0F]">OTHER</option>
                         </select>
-                        {errors.gender && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.gender.message}</p>}
+                        {errors.gender && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.gender as any).message}</p>}
                     </div>
 
                     <div className="md:col-span-2 space-y-3">
@@ -295,7 +295,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">PRIMARY MOBILE *</label>
                         <input {...register('mobile')} type="text" maxLength={10} className="input-cyber" placeholder="10-DIGIT IDENTIFIER" />
-                        {errors.mobile && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.mobile.message}</p>}
+                        {errors.mobile && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.mobile as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -306,7 +306,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                     <div className="md:col-span-2 space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">DIGITAL MAILBOX</label>
                         <input {...register('email')} type="email" className="input-cyber" placeholder="SECURE@DOMAIN.COM" />
-                        {errors.email && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.email.message}</p>}
+                        {errors.email && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.email as any).message}</p>}
                     </div>
                 </div>
             </div>
@@ -326,13 +326,13 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                     <div className="space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">DISTRICT SECTOR *</label>
                         <input {...register('district')} type="text" className="input-cyber" placeholder="OPERATIONAL REGION" />
-                        {errors.district && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.district.message}</p>}
+                        {errors.district && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.district as any).message}</p>}
                     </div>
 
                     <div className="md:col-span-2 space-y-3">
                         <label className="text-[10px] font-black uppercase tracking-widest text-white/50 ml-4">DEPLOYMENT BASE *</label>
                         <textarea {...register('address')} rows={3} className="input-cyber resize-none" placeholder="FULL OPERATIONAL ADDRESS..." />
-                        {errors.address && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.address.message}</p>}
+                        {errors.address && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.address as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -363,7 +363,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                             <option value="All Rounder" className="bg-[#0A0A0F]">ALL ROUNDER</option>
                             <option value="Wicket Keeper" className="bg-[#0A0A0F]">WICKET KEEPER</option>
                         </select>
-                        {errors.player_role && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.player_role.message}</p>}
+                        {errors.player_role && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.player_role as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -373,7 +373,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                             <option value="Right" className="bg-[#0A0A0F]">RIGHT HANDED</option>
                             <option value="Left" className="bg-[#0A0A0F]">LEFT HANDED</option>
                         </select>
-                        {errors.batting_arm && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.batting_arm.message}</p>}
+                        {errors.batting_arm && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.batting_arm as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
@@ -388,7 +388,7 @@ export default function RegistrationForm({ tournamentId, creatorId, fee }: Props
                             <option value="XXL" className="bg-[#0A0A0F]">XXL</option>
                             <option value="XXXL" className="bg-[#0A0A0F]">XXXL</option>
                         </select>
-                        {errors.tshirt_size && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{errors.tshirt_size.message}</p>}
+                        {errors.tshirt_size && <p className="text-red-400 text-[9px] font-bold uppercase ml-4 mt-1">{(errors.tshirt_size as any).message}</p>}
                     </div>
 
                     <div className="space-y-3">
